@@ -1,0 +1,31 @@
+# Python Compiled files
+*.pyc
+
+# Cython compiled files
+*.c
+*.pyd
+
+# Visual Studio project files
+*.pyproj
+*.sln
+*.suo
+.vs/
+.cache/
+
+# Spyder files
+.spyproject/
+
+# Jupyter notebook files
+.ipynb_checkpoints/
+
+# Setuptools files
+*.egg-info
+
+# Coverage file
+.coverage
+/build
+*.c
+*.c
+
+# Pypi files
+/dist
