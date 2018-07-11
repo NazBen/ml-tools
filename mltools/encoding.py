@@ -13,7 +13,8 @@ def target_encoder(train,
                    prior=None,
                    min_samples_leaf=1,
                    smoothing=1,
-                   noise_level=0):
+                   noise_level=0,
+                   loo=False):
     """    Smoothing is computed like in the following paper by Daniele Micci-Barreca
     https://kaggle2.blob.core.windows.net/forum-message-attachments/225952/7441/high%20cardinality%20categoricals.pdf
     """
@@ -53,10 +54,15 @@ def target_encoder(train,
 
         train = pd.merge(train, tmp, on=feature, how='left').rename(
             columns={'average': name})
-        # train[name] = (averages[name]*count - train[target])/(1.0*(count - 1).replace(0, 1))
+
+        count = train.groupby(by=feature)[target].transform("count")
+        if loo:
+            train[name] = (train[name]*count - train[target])/(1.0*(count - 1).replace(0, 1))
         train.loc[:, name] = add_noise(
             train.loc[:, name].fillna(target_mean), noise_level)
 
+        train[name].clip(0, 1, inplace=True)
+        # print(train[(train["BuySell"] == "Sell") & (train["CustomerIdx"] == 2779) & (train["IsinIdx"] == 4960)])
         test = pd.merge(test, tmp, on=feature, how='left').rename(
             columns={'average': name})
         test.loc[:, name] = add_noise(

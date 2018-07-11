@@ -3,11 +3,15 @@ import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_importance(importance, features):
+def plot_importance(importance, features, ax=None):
     features = np.asarray(features)
     idx = importance.argsort()
+    if ax is None:
+        figsize = (4, int(len(features)/3))
+    else:
+        figsize = None
     pd.DataFrame(importance[idx], index=features[idx]).plot(
-        kind='barh', figsize=(4, int(len(features)/3)))
+        kind='barh', figsize=figsize, ax=ax)
 
 
 def plot_correlation(df, method='pearson', ratio=(0.7, 0.5)):
